@@ -9,15 +9,17 @@ import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../features/auth/authSlice';
 
+// copy Yup from npm Yup
+let schema = Yup.object({
+  email: Yup.string().email("Email Should be valid").required("Email is Required"),
+  password: Yup.string().required("Password is Required"),
+});
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // copy Yup from npm Yup
-  let schema = Yup.object({
-    email: Yup.string().email("Email Should be valid").required("Email is Required"),
-    password: Yup.string().required("Password is Required"),
-    });
+
     
 
   // copy g....Formik...userformik
@@ -30,22 +32,25 @@ const Login = () => {
     validationSchema: schema,
     onSubmit: (values) => {
       dispatch(login(values));
-      alert(JSON.stringify(values, null, 2));
+      // alert(JSON.stringify(values, null, 2));     vv m se hta diya 8th admin intergration 4.9
     },
   });
 
-  const { user, isLoading, isError, isSuccess, message} = useSelector((state)=>state.auth);
+  // const { user, isLoading, isError, isSuccess, message} = useSelector((state)=>state.auth);
+  const authState = useSelector((state) => state);
+  const { user, isLoading, isError, isSuccess, message} = authState.auth;
   
   useEffect(() => {
-    // console.log(user);
-    if(!user == null || isSuccess) {
+    // console.log(user); if(!user == null || isSuccess) {
+    if(isSuccess) {
       navigate("admin");
     }
     else
     {
-      alert("not ");
+      // alert("not ");  niche array m message bhi tha phle
+      navigate("");
     }
-  },[user, isLoading, isError, isSuccess, message]);
+  },[user, isLoading, isError, isSuccess]);
 
   return (
     <div className="py-5" style={{ background:"#ffd333", minHeight:"100vh" }}>
@@ -59,21 +64,29 @@ const Login = () => {
             <h3 className="text-center title">Login</h3>
             <p className="text-center">Login to your account to continue.</p>
 
+             <div className="error text-center">
+              {message.message == "Rejected" ? "You are not an Admin" : ""}
+             </div>
+
+
             <form action="" onSubmit={formik.handleSubmit}>
               <CustomInput 
                   type="text" 
                   name="email" 
                   label="Email Address" 
-                  id="email" 
-                  val={formik.values.email} 
-                  onCh={formik.handleChange("email")}
-                  
+                  id="email"  
+                  onChng={formik.handleChange("email")}
+                  onBlr={formik.handleBlur("email")}
+                  val={formik.values.email}
                 />
                 {/* copy Yup code from Formik....search Yup */}
-                <div className="error">
+                {/* <div className="error ">
                  {formik.touched.email && formik.errors.email ? (
                    <div>{formik.errors.email}</div>
                   ) : null}
+                </div> */}
+                <div className="error  mt-2">
+                {formik.touched.email && formik.errors.email}
                 </div>
  
 
@@ -82,13 +95,17 @@ const Login = () => {
                   name="password" 
                   label="Password" 
                   id="pass" 
-                  val={formik.values.password} 
-                  onCh={formik.handleChange("password")}
+                  onChng={formik.handleChange("password")}
+                  onBlr={formik.handleBlur("password")}
+                  val={formik.values.password}
                 />
-                <div className="error">
+                {/* <div className="error">
                  {formik.touched.password && formik.errors.password ? (
                  <div>{formik.errors.password}</div>
                 ) : null}
+                </div> */}
+                <div className="error  mt-2">
+                {formik.touched.password && formik.errors.password}
                 </div>
  
 

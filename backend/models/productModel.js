@@ -38,15 +38,24 @@ var productSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    images: [],
+    images: [
+        {
+        public_id: String,
+        url:String,
+        },
+    ],
     // color: {
     //     type: String,
     //     // enum: ["Black","Brown","red"],
     //     required: true,
     // },
-    color: [],
-    tags: [],
-
+    
+    color: [], //when backend integrate(6v.. 27min)
+    tags: [],   //same time
+    // color: {
+    //     type: String,
+    //     required:true,
+    // },          when 8th vv 77.5 integration
     ratings: [
         {
         star: Number,

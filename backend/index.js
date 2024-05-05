@@ -15,6 +15,7 @@ const colorRouter = require("./routes/colorRoute");
 const enqRouter = require("./routes/enqRoute");
 
 const couponRouter = require("./routes/couponRoute");
+const uploadRouter = require("./routes/uploadRoute");
 
 
 const bodyParser = require("body-parser");
@@ -52,6 +53,9 @@ app.use("/api/brand", brandRouter);
 app.use("/api/coupon", couponRouter);
 app.use("/api/color", colorRouter);
 app.use("/api/enquiry", enqRouter);
+
+app.use("/api/upload", uploadRouter);
+
 
 app.use(notFound);
 app.use(errorHandler);

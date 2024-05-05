@@ -414,7 +414,8 @@ const userCart = asyncHandler(async (req,res) => {
         // check if user already have product in cart
         const alreadyExistCart = await Cart.findOne({ orderby:user._id });
         if(alreadyExistCart) {
-            alreadyExistCart.remove();
+            // alreadyExistCart.remove();
+            await Cart.deleteOne({ _id: alreadyExistCart._id });
         }
 
         for(let i=0;i<cart.length;i++)
@@ -553,13 +554,31 @@ const applyCoupon = asyncHandler(async (req, res) => {
 const getOrders = asyncHandler(async (req,res) => {
     const { _id } = req.user;
     validateMongodbId(_id);
-    
+    console.log(_id);
     try
     {
        const userorders = await Order.findOne({ orderby: _id })
            .populate("products.product")
+           .populate("orderby")
            .exec();
+        // console.log(userorders);
        res.json(userorders);
+
+    } catch (error) {
+        throw new Error(error);
+    }
+});
+
+const getAllOrders = asyncHandler(async (req,res) => {
+    
+    try
+    {
+       const alluserorders = await Order.find()
+           .populate("products.product")
+           .populate("orderby")
+           .exec();
+        // console.log(userorders);
+       res.json(alluserorders);
 
     } catch (error) {
         throw new Error(error);
@@ -619,6 +638,8 @@ module.exports = {
         getOrders,
 
         updateOrderStatus,
+
+        getAllOrders,
        };
    
    
